@@ -1,0 +1,42 @@
+[
+   {
+      "time": 33,
+      "type":"BLOCKNOTIFY",
+      "status": "STARTING",
+      "workflowId": "123e4567-e89b-12d3-a456-426614174000",
+      "globalBlockId": "000e0000-e00b-12d3-a456-426614174000",
+      "localBlockId": 111,
+      "lifeCycleId": 33,
+      "executionId": "222e2222-e22b-12d3-a456-426614174000"
+   },
+   {
+      "time": 40,
+      "type":"VALUE",
+      "status": "RUNNING",
+      "workflowId": "999e4567-e89b-12d3-a456-426614174000",
+      "globalBlockId": "999e9999-e00b-12d3-a456-426614174000",
+      "localBlockId": 345,
+      "lifeCycleId": 23,
+      "executionId": "222e2222-e22b-12d3-a456-426614174000"
+   },
+   {
+      "time": 33,
+      "type":"SYNC",
+      "status": "ABORTED",
+      "workflowId": "123e4567-e89b-12d3-a456-426614174000",
+      "globalBlockId": "444e4444-e00b-12d3-a456-426614174000",
+      "localBlockId": 111,
+      "lifeCycleId": 33,
+      "executionId": "555e5555-e22b-12d3-a456-426614174000"
+   },
+   {
+      "time": 33,
+      "type":"SYNC",
+      "status": "WAITING",
+      "workflowId": "123e4567-e89b-12d3-a456-426614174000",
+      "globalBlockId": "444e4444-e00b-12d3-a456-426614174000",
+      "localBlockId": 111,
+      "lifeCycleId": 33,
+      "executionId": "555e5555-e22b-12d3-a456-426614174000"
+   }
+]

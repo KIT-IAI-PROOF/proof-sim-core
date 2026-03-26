@@ -1,0 +1,20 @@
+[
+  {
+    "name": "output1",
+    "type": "float",
+    "communicationType": "STEPBASED",
+    "stepId": 0
+  },
+  {
+    "name": "output2",
+    "type": "float",
+    "communicationType": "STEPBASED",
+    "stepId": 1
+  },
+  {
+    "name": "output3",
+    "type": "float",
+    "communicationType": "STEPBASED",
+    "stepId": 2
+  }
+]
