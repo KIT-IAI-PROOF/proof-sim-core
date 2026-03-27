@@ -1,0 +1,26 @@
+[
+   {
+      "type":"VALUE",
+      "lifeCycleId":0,
+      "data":{
+      },
+      "communicationStepSize":1,
+      "communicationPoint":0
+   },
+   {
+      "type":"VALUE",
+      "lifeCycleId":1,
+      "data":{
+      },
+      "communicationStepSize":1,
+      "communicationPoint":1
+   },
+   {
+      "type":"VALUE",
+      "lifeCycleId":2,
+      "data":{
+      },
+      "communicationStepSize":1,
+      "communicationPoint":0
+   }
+]

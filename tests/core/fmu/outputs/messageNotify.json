@@ -1,0 +1,23 @@
+[
+   {
+      "type":"NOTIFY",
+      "lifeCycleId":0,
+      "status":"COMPLETED",
+      "communicationStepSize":1,
+      "communicationPoint":0
+   },
+   {
+      "type":"NOTIFY",
+      "lifeCycleId":1,
+      "status":"COMPLETED",
+      "communicationStepSize":1,
+      "communicationPoint":1
+   },
+   {
+      "type":"NOTIFY",
+      "lifeCycleId":2,
+      "status":"COMPLETED",
+      "communicationStepSize":1,
+      "communicationPoint":0
+   }
+]
