@@ -1,0 +1,26 @@
+[
+  {
+    "communicationPoint": 0,
+    "communicationStepSize": 1,
+    "lifeCycleId": 0,
+    "stepType": "INIT",
+    "time": 0,
+    "type": "TACT"
+  },
+  {
+    "communicationPoint": 0,
+    "communicationStepSize": 1,
+    "lifeCycleId": 1,
+    "stepType": "STEP",
+    "time": 0,
+    "type": "TACT"
+  },
+  {
+    "communicationPoint": 0,
+    "communicationStepSize": 1,
+    "lifeCycleId": 2,
+    "stepType": "FINALIZE",
+    "time": 0,
+    "type": "TACT"
+  }
+]
