@@ -1,0 +1,5 @@
+[
+  {"time": 1673883759, "type": "SYNC", "stepType": "INIT", "lifeCycleId": 0},
+  {"time": 1673883759, "type": "BLOCKNOTIFY", "stepType": "STEP", "lifeCycleId": 1},
+  {"time": 1673883759, "type": "LIFECYCLENOTIFY", "stepType": "FINALIZE", "lifeCycleId": 2}
+]

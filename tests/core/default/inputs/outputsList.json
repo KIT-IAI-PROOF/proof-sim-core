@@ -1,0 +1,26 @@
+[
+  {
+    "name": "test_output_1",
+    "type": "float",
+    "stepId": 0,
+    "eventId": 2,
+    "communicationType": "STEPBASED",
+    "metadata": {"test": "test"}
+  },
+  {
+    "name": "test_output_2",
+    "type": "int",
+    "stepId": 0,
+    "eventId": 3,
+    "communicationType": "EVENT_STATIC",
+    "metadata": {}
+  },
+  {
+    "name": "test_output_3",
+    "type": "float",
+    "stepId": 2,
+    "eventId": 2,
+    "communicationType": "STEPBASED_STATIC",
+    "metadata": {"test": "test"}
+  }
+]

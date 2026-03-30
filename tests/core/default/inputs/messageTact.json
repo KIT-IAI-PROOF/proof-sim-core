@@ -1,0 +1,3 @@
+[  {"lifeCycleId": 0,    "stepType": "INIT",    "time": 0,    "type": "SYNC"  },
+  {"lifeCycleId": 1,    "stepType": "STEP",    "time": 0,    "type": "SYNC"  },
+  {"lifeCycleId": 2,    "stepType": "FINALIZE",    "time": 0,    "type": "SYNC"  }]

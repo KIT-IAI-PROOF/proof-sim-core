@@ -1,0 +1,6 @@
+[
+    { "name":"test_input_1", "type":"float", "stepId":0, "eventId": 999, "communicationType":"STEPBASED", "metadata":{"unit":"W", "test":"test"}},
+    { "name":"test_input_2", "type":"int", "stepId": 1, "eventId": 999, "communicationType": "STEPBASED_STATIC", "metadata":{"unit":"Pa"}},
+    { "name":"test_input_3", "type":"string", "stepId": 2, "eventId": 999, "communicationType": "STEPBASED", "metadata":{"unit":"Pa"}}
+]
+

@@ -1,0 +1,8 @@
+[
+  {
+    "name": "input1",
+    "type": "float",
+    "communicationType": "STEPBASED",
+    "stepId": 0
+  }
+]
