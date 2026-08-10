@@ -31,7 +31,7 @@ jobs:
         run: python3 -m build
 
       - name: Upload package to GitHub Packages
-        run: python3 -m twine upload --repository-url https://pypi.pkg.github.com/${{ github.repository_owner }} dist/*
+        run: python3 -m twine upload --verbose --repository-url https://pypi.pkg.github.com/${{ github.repository_owner }} dist/*
         env:
           TWINE_USERNAME: ${{ github.actor }}
           TWINE_PASSWORD: ${{ env.GITHUB_TOKEN }}
