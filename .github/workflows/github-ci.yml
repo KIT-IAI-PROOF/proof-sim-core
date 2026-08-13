@@ -8,6 +8,7 @@ env:
 jobs:
   deploy:
     #if: github.ref_type == 'tag'
+    if: false
     runs-on: ubuntu-latest
 
     permissions:
