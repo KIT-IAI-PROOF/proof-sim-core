@@ -85,7 +85,7 @@ class BaseWrapper:
             self.logger.debug("waitForSync: " + str(self.wait_for_sync))
         else:
             err_txt = "Error in __init__: --waitForSync not provided!" + "\n" + str(traceback.format_exc())
-            self.logger.debug(err_txt)
+            self.logger.error(err_txt)
             self.send_init_notify(block_status=BlockStatus.ERROR_INIT, error_text=err_txt)
 
         self.logger.debug("__init__ passed, use sockets: " + str(self.use_sockets))
@@ -110,7 +110,7 @@ class BaseWrapper:
                     "BaseWrapper init entered and initialized, sending NOTIFY with status=BlockStatus.INITIALIZED")
             elif status == BlockStatus.ERROR_INIT:
                 error_text = "init error: " + error_text + "\n" + str(traceback.format_exc())
-                self.logger.debug(
+                self.logger.error(
                     "BaseWrapper init entered and an error occurred, sending NOTIFY with status=BlockStatus.ERROR_INIT "
                     "and errorText=%s", error_text)
             else:
@@ -118,12 +118,12 @@ class BaseWrapper:
                                                                               "BlockStatus.INITIALIZED or "
                                                                               "BlockStatus.ERROR_INIT")
                 status = BlockStatus.ERROR_INIT
-                self.logger.debug("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
+                self.logger.error("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
 
             await self.send_notify(SimulationPhase.INIT, block_status=status, error_text=error_text)
         except Exception as e:
             err_txt = "An error occurred in init: " + str(e) + "\n" + str(traceback.format_exc())
-            self.logger.debug(err_txt)
+            self.logger.error(err_txt)
             await self.send_notify(SimulationPhase.INIT, BlockStatus.ERROR_INIT, error_text=err_txt)
         return
 
@@ -154,20 +154,20 @@ class BaseWrapper:
                 self.logger.debug("Sending NOTIFY with status=BlockStatus.EXECUTION_FINISHED")
             elif status == BlockStatus.ERROR_STEP:
                 error_text = "step error: " + error_text + "\n" + str(traceback.format_exc())
-                self.logger.debug("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
+                self.logger.error("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
             else:
                 error_text = "step error: wrong BlockStatus " + str(status) + ("! Use one of "
                                                                                "BlockStatus.EXECUTION_STEP_FINISHED, "
                                                                                "BlockStatus.EXECUTION_FINISHED or "
                                                                                "BlockStatus.ERROR_STEP")
                 status = BlockStatus.ERROR_STEP
-                self.logger.debug("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
+                self.logger.error("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
 
             await self.send_notify(SimulationPhase.EXECUTE, block_status=status, error_text=error_text)
             self.logger.debug("NOTIFY Message sent ...")
         except Exception as e:
             err_txt = "An error occurred in step: " + str(e) + "\n" + str(traceback.format_exc())
-            self.logger.debug(err_txt)
+            self.logger.error(err_txt)
             await self.send_notify(SimulationPhase.EXECUTE, BlockStatus.ERROR_STEP, error_text=err_txt)
         return
 
@@ -192,19 +192,19 @@ class BaseWrapper:
                 self.logger.debug("Sending NOTIFY with status=BlockStatus.FINALIZED")
             elif status == BlockStatus.ERROR_FINALIZE:
                 error_text = "finalize error: " + error_text + "\n" + str(traceback.format_exc())
-                self.logger.debug("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
+                self.logger.error("An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
             else:
                 error_text = "finalize error: wrong BlockStatus " + str(status) + ("! Use either "
                                                                                    "BlockStatus.FINALIZED or "
                                                                                    "BlockStatus.ERROR_FINALIZE")
                 status = BlockStatus.ERROR_FINALIZE
-                self.logger.debug(
+                self.logger.error(
                     "An error occurred, sending NOTIFY with status=%s and errorText=%s", status, error_text)
 
             await self.send_notify(SimulationPhase.FINALIZE, block_status=status, error_text=error_text)
         except Exception as e:
             err_txt = "An error occurred in finalize: " + str(e) + "\n" + str(traceback.format_exc())
-            self.logger.debug(err_txt)
+            self.logger.error(err_txt)
             await self.send_notify(SimulationPhase.FINALIZE, BlockStatus.ERROR_FINALIZE, error_text=err_txt)
 
     async def shut_down(self, status=None, error_text="") -> None:
@@ -255,13 +255,15 @@ class BaseWrapper:
         for key, value in variables.items():
             setattr(self, key, value)
         
+        if phase == SimulationPhase.INIT:
+            await self.send_notify(phase, BlockStatus.VALUES_SET, error_text='')
+
         if phase == SimulationPhase.EXECUTE:
             if self.wait_for_sync:
                 self.logger.debug(f"waiting for SYNC, then sending value, CP " + str(self.communication_point))
             else:
                 self.logger.info( "Do not wait for a SYNC, performing step directly ..." )
                 await self.step()
-
 
     async def send_value(self, phase: SimulationPhase) -> ValueMessage:
         """
@@ -289,7 +291,7 @@ class BaseWrapper:
             return value
         except Exception as e:
             err_txt = "An error occurred in send_value: " + str(e) + "\n" + str(traceback.format_exc())
-            self.logger.debug(err_txt)
+            self.logger.error(err_txt)
             await self.send_notify(phase, BlockStatus.ERROR_STEP, error_text=err_txt)
 
     async def send_notify(self, phase: SimulationPhase, block_status: BlockStatus, error_text: str) -> None:
@@ -299,7 +301,7 @@ class BaseWrapper:
         :param block_status: BlockStatus of the notify messag
         :return: NotifyMessage
         """
-        self.logger.debug("BaseWrapper.send_notify() entered ... CP=" + str(self.communication_point))
+        #self.logger.debug("BaseWrapper.send_notify() entered ... CP=" + str(self.communication_point))
         try:
             notify = NotifyMessage(
                 time=round(datetime.now().timestamp() * 1000), #int(datetime.now().timestamp() * 1000),
@@ -309,23 +311,19 @@ class BaseWrapper:
                 communicationPoint=self.communication_point,
                 errorText=error_text
             )
-            self.logger.debug("BaseWrapper.send_notify() notify message: " + str(notify))
 
             if self.use_sockets:
-                self.logger.debug("BaseWrapper:: sending notify to socket ..." + str(notify.model_dump_json()))
+                self.logger.debug("sending notify to socket ..." + str(notify.model_dump_json()))
                 self.socket_writer.send(notify.model_dump_json() + '\n')
             else:
-                self.logger.debug("BaseWrapper:: sending notify to stdout ..." + str(notify.model_dump_json()))
+                self.logger.debug("sending notify to stdout ..." + str(notify.model_dump_json()))
                 stdout.write(notify.model_dump_json() + '\n')
                 stdout.flush()
 
-            self.logger.debug("BaseWrapper.send_notify() passed, returning ...")
             return #notify
         except Exception as e:
             err_txt = "An error occurred in send_notify: " + str(e) + "\n" + str(traceback.format_exc())
-            self.logger.debug(err_txt)
-            await self.send_notify(phase, BlockStatus.ERROR_STEP, error_text=err_txt)
-
+            self.logger.error(err_txt)
 
     def send_init_notify(self, block_status: BlockStatus, error_text: str) -> None:
         """
@@ -415,7 +413,7 @@ async def sync_function(message: SyncMessage, wrapper: BaseWrapper) -> None:
             await wrapper.shut_down()
 
     except (OSError, Exception) as e:
-        wrapper.logger.debug(f"ERROR performing {step_function}!" + str(e) )
+        wrapper.logger.error(f"ERROR performing {step_function}!" + str(e) )
         await wrapper.send_notify(message.phase, BlockStatus.ERROR_STEP, str(e))
 
     #RL
@@ -498,7 +496,7 @@ async def main(wrapper) -> None:
                     wrapper.logger.debug("BaseWrapper: unknown message type: " + str(message['type']))
                     continue
             except Exception as e:
-                wrapper.logger.debug("Error in main: " + str(e))
+                wrapper.logger.error("Error in main: " + str(e))
                 continue
 
             # if "MSGSIZE" in message:
