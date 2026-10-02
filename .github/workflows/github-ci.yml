@@ -1,0 +1,39 @@
+name: github-ci.yml
+on:
+  push:
+
+env:
+  GITHUB_TOKEN: ${{ secrets.PROOF_PACKAGE_CI_TOKEN }}
+
+jobs:
+  deploy:
+    #if: github.ref_type == 'tag'
+    if: false
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.12
+          cache: 'pip'
+
+      - name: Install package
+        run: python3 -m pip install -q .
+
+      - name: Build package
+        run: python3 -m build
+
+      - name: Upload package to GitHub Packages
+        run: python3 -m twine upload --verbose --repository-url https://pypi.pkg.github.com/${{ github.repository_owner }} dist/*
+        env:
+          TWINE_USERNAME: ${{ github.actor }}
+          TWINE_PASSWORD: ${{ env.GITHUB_TOKEN }}
+
