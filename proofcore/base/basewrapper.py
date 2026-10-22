@@ -324,6 +324,8 @@ class BaseWrapper:
         except Exception as e:
             err_txt = "An error occurred in send_notify: " + str(e) + "\n" + str(traceback.format_exc())
             self.logger.error(err_txt)
+            #await self.send_notify(phase, BlockStatus.ERROR_STEP, error_text=err_txt)
+
 
     def send_init_notify(self, block_status: BlockStatus, error_text: str) -> None:
         """
