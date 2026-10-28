@@ -70,7 +70,7 @@ class BaseFmuRunner(BaseWrapper):
         self.model_description = None
         self.current_fmu_time = 0.0
         self._variables_map = {}  # variable name -> (valueReference, type)
-        self._string_helper = StringHelper(logger=logger)
+        self._string_helper = StringHelper(logger=logger, header_requested=False)
         super(BaseFmuRunner, self).__init__(bwoptions=options)
         # Output attribute names are fixed for this wrapper; not user-configurable via -o.
         #self.outputs = ["fmu_output_json", "fmu_output_csv"]
@@ -285,10 +285,8 @@ class BaseFmuRunner(BaseWrapper):
         Dispatches on the last line's leading character:
         - Starts with '[' or '{': a Python literal, e.g. "[1.0, 2.0]", "[[1,2],[3,4]]",
           "[{'a': 1}]" - parsed with ast.literal_eval (only the last line is used).
-        - Otherwise: a CSV line, with or without a header line before it, e.g.
-          "time,irradiance\n30.0,0.0" or just "30.0,0.0" (header already known from an
-          earlier call) - parsed with extract_values_from_line() into a dict keyed by
-          column name.
+        - Otherwise: a headerless CSV line, e.g. "0,1,2" - fields are mapped positionally
+          onto all_input_keys, in order (1st field -> 1st key, etc.).
         Falls back to the configured input_dict start values when fmu_input_values is empty.
         """
         rows = fmu_input_values.splitlines() if fmu_input_values else []
@@ -302,7 +300,11 @@ class BaseFmuRunner(BaseWrapper):
             logger.debug(f"'{input_values}' is not a Python literal, parsing '{fmu_input_values}' as CSV instead")
             if not all_input_keys:
                 logger.warning("fmu_input_values is set but no input keys are configured; parsed values will not be applied to the FMU.")
-            return [self._string_helper.extract_values_from_line(fmu_input_values, all_input_keys)]
+            # For the base_fmu_runner we assume all values always to be given!
+            fields = self._string_helper.parse_row(input_values)
+            if len(fields) != len(all_input_keys):
+                logger.debug(f"Field count {len(fields)} does not match input key count {len(all_input_keys)} for row '{input_values}'")
+            return [dict(zip(all_input_keys, fields))]
         elif isinstance(self.input_dict, dict) and len(self.input_dict) > 0:
             # Use start values provided for inputs
             return [list(self.input_dict.values())]
@@ -316,6 +318,7 @@ class BaseFmuRunner(BaseWrapper):
         string_keys = []
         numeric_keys = []
         input_data = None
+        input_values = None
 
         try:
             all_input_keys = []

@@ -29,6 +29,18 @@ class StringHelper:
         """
         return self.extract_values_from_line(line, [column_name])[column_name]
 
+    def parse_row(self, line: str) -> list[str]:
+        """
+        Parse one line of delimited text into a plain list of fields, with no header/name resolution.
+
+        If several lines are passed at once, only the last one is used as the data row.
+        """
+        rows = line.splitlines()
+        self._logger.debug(f"Rows:\n{rows}")
+        if not rows:
+            return []
+        return self._parse_single_csv_row(rows[-1])
+
     def extract_values_from_line(self, line: str, column_names: list[str]) -> dict:
         """
         Extract the values for multiple configured columns from one CSV line, in a single pass.
