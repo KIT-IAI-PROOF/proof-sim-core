@@ -325,6 +325,7 @@ class BaseWrapper:
             err_txt = "An error occurred in send_notify: " + str(e) + "\n" + str(traceback.format_exc())
             self.logger.error(err_txt)
 
+
     def send_init_notify(self, block_status: BlockStatus, error_text: str) -> None:
         """
         Create and send a notify message with parameters from Wrapper at initialization.
